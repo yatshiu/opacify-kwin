@@ -10,6 +10,9 @@ plugin_name="Opacify-kwin"
 # Functions
 #
 
+# to install
+# plasmapkg2 --type kwinscript -i /path/to/myscript.kwinscript
+
 _invoke() {
 	method="$1"
 	shift 1
