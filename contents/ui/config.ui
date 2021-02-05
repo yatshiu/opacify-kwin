@@ -144,6 +144,9 @@
          <property name="toolTip">
           <string>List of Window Classes to ignore, spearated by comma</string>
          </property>
+         <property name="placeholderText">
+          <string>conky-semi</string>
+         </property>
         </widget>
        </item>
       </layout>

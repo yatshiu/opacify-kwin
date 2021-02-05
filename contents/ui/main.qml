@@ -31,6 +31,8 @@ Item {
     property var current_stack: {"a": 2}
 
     PlasmaCore.DataSource {
+        // TODO: to get stacking order properly 
+        //    https://bugs.kde.org/show_bug.cgi?id=409889
         id: shell
         engine: 'executable'
         readonly property var cmd: "xprop -root |grep _NET_CLIENT_LIST_STACKING\\( | cut -b 48- ";
@@ -180,14 +182,45 @@ Item {
         );
     }
 
+    function workspace_callback() {
+        if (shell == null) {
+            remove_event_handlers()
+            return;
+        }
+        shell.run()
+    }
+
+    function desktop_change_callback(desktop, client) {
+        if (shell == null) {
+            remove_event_handlers()
+            return;
+        }
+        if workspace.activeClient != null && desktop != workspace.activeClient.desktop && workspace.activeClient.desktop != -1)
+            reset_all();
+    }
+
+    function register_event_handers() {
+        workspace.clientActivated.connect(workspace_callback)
+//        workspace.clientAdded.connect(workspace_callback);
+//        workspace.clientRemoved.connect(workspace_callback);
+//        workspace.clientSetKeepAbove.connect(function (client, keepAbove) {shell.run();});
+//        workspace.clientRestored.connect(workspace_callback);
+        workspace.currentDesktopChanged.connect(desktop_change_callback)
+    }
+
+    function remove_event_handlers() {
+        workspace.clientActivated.disconnect(workspace_callback)
+//        workspace.clientAdded.connect(workspace_callback);
+//        workspace.clientRemoved.connect(workspace_callback);
+//        workspace.clientSetKeepAbove.connect(function (client, keepAbove) {shell.run();});
+//        workspace.clientRestored.disconnect(workspace_callback);
+        workspace.currentDesktopChanged.disconnect(desktop_change_callback)
+    }
+
     Component.onCompleted: {
         console.log("Opacify-kwin started");
         shell.run();
-        console.log("ignoreClass = " + ignoreClass + ", ignoreRole = " + ignoreRole)
-        workspace.clientActivated.connect(function (client) {shell.run();});
-//        workspace.clientAdded.connect(function (client) {shell.run();});
-//        workspace.clientRemoved.connect(function (client) {shell.run();});
-//        workspace.clientSetKeepAbove.connect(function (client, keepAbove) {shell.run();});
-        workspace.clientRestored.connect(function (client) {shell.run();});
+        console.log("ignoreClass:" + ignoreClass + ", ignoreRole: " + ignoreRole, ", activeOpacity: " + activeOpacity + ", inactiveOpacity: " + inactiveOpacity)
+        register_event_handers();
     }
 }
