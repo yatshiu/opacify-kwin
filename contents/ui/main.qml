@@ -195,7 +195,7 @@ Item {
             remove_event_handlers()
             return;
         }
-        if workspace.activeClient != null && desktop != workspace.activeClient.desktop && workspace.activeClient.desktop != -1)
+        if (workspace.activeClient != null && desktop != workspace.activeClient.desktop && workspace.activeClient.desktop != -1)
             reset_all();
     }
 
