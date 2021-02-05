@@ -6,6 +6,9 @@ file_path="/home/nothing/dev/opacify-kwin/content/ui/main.qml"
 #file_path="unload"
 plugin_name="Opacify-kwin"
 
+# make pkg
+# 7z a -tzip opacify-kwin-0.0.5.kwinscript contents metadata.desktop README.md 
+
 #
 # Functions
 #
